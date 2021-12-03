@@ -67,7 +67,6 @@ You can download pretrained models here:
 
 - We benchmark six shortlisted representatative DL-based methods on the Pipework.
 - On top of our newly proposed SE-LAO and the strong baseline PseduoGrid, we construct our SE-PseudoGrid; It achieves better performance than the baseline, decreasing OA and avgAcc error rate of the backbone by 25.4%, 34.5%, respectively.
-
 <img src="images/fig8-SE-PseudoGrid.png" alt="" width="700"/>
 
 |Network | 	OA (%) |avgAcc (%) |
