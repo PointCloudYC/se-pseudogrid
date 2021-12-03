@@ -7,9 +7,10 @@ This repository is the official implementation of **Automated Classification of 
 We proposed a new local aggregation operator termed SE-LAO for point cloud feature learning through introducing the squeeze-excite (SE) mechanism from SENet into the pseudo grid LAO.
 
 - the conventional PseudoGrid LAO
-<img src="images/fig3-pseudo-grid-LAO.png" alt="" width="400"/>
+<img src="images/fig3-pseudo-grid-LAO.png" alt="" width="700"/>
+
 - our proposed SE-LAO
-<img src="images/fig4-SE-LAO.png" alt="" width="400"/>
+<img src="images/fig4-SE-LAO.png" alt="" width="600"/>
 
 ## Pipework dataset
 
@@ -17,9 +18,9 @@ As the sole publicly open dataset for piping components, we canonicalize it foll
 - typical instances for the 17 categories in the Pipework
 <img src="images/fig11-instances.png" alt="instances of Pipework" width="400"/>
 - class distribution 
-<img src="images/fig9-pipework.png" alt="" width="400"/>
+<img src="images/fig9-pipework.png" alt="" width="600"/>
 - train and test set distribution
-<img src="images/fig10-dataset-splitting.png" alt="" width="400"/>
+<img src="images/fig10-dataset-splitting.png" alt="" width="600"/>
 
 ## Requirements
 
@@ -63,7 +64,7 @@ You can download pretrained models here:
 
 - We benchmark six shortlisted representatative DL-based methods on the Pipework.
 - On top of our newly proposed SE-LAO and the strong baseline PseduoGrid, we construct our SE-PseudoGrid; It achieves better performance than the baseline, decreasing OA and avgAcc error rate of the backbone by 25.4%, 34.5%, respectively.
-<img src="images/fig8-SE-PseudoGrid.png" alt="" width="400"/>
+<img src="images/fig8-SE-PseudoGrid.png" alt="" width="700"/>
 
 |Network | 	OA (%) |avgAcc (%) |
 |--------|---------|-----------|
