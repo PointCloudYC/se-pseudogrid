@@ -1,11 +1,25 @@
-# Automated Classification of Piping Components from 3D LiDAR Point Clouds using SE-PseudoGrid
+# Classification of Piping Components
 
 **Coming soon!** 
 
-This repository is the official implementation of [Automated Classification of Piping Components from 3D LiDAR Point Clouds using SE-PseudoGrid](xxx). 
+This repository is the official implementation of **Automated Classification of Piping Components from 3D LiDAR Point Clouds using SE-PseudoGrid**, [link (to be added)](xxx). 
 
->📋  Optional: include a graphic explaining your approach/main result, bibtex entry, link to demos, blog posts and tutorials
+We proposed a new local aggregation operator termed SE-LAO for point cloud feature learning through introducing the squeeze-excite (SE) mechanism from SENet into the pseudo grid LAO.
 
+- the conventional PseudoGrid LAO
+![](images/fig3-pseudo-grid-LAO.png)
+- our proposed SE-LAO
+![](images/fig4-SE-LAO.png)
+
+## Pipework dataset
+
+As the sole publicly open dataset for piping components, we canonicalize it following ModelNet40' pratice.
+- typical instances for the 17 categories in the Pipework
+![](images/fig11-instances.png)
+- class distribution 
+![](images/fig9-pipework.png)
+- train and test set distribution
+![](images/fig10-dataset-splitting.png)
 
 ## Requirements
 
@@ -47,13 +61,20 @@ You can download pretrained models here:
 
 ## Results
 
-Our model achieves the following performance on :
+- We benchmark six shortlisted representatative DL-based methods on the Pipework.
+- On top of our newly proposed SE-LAO and the strong baseline PseduoGrid, we construct our SE-PseudoGrid; It achieves better performance than the baseline, decreasing OA and avgAcc error rate of the backbone by 25.4%, 34.5%, respectively.
+![](images/fig8-SE-PseudoGrid.png)
 
-### [Image Classification on ImageNet](https://paperswithcode.com/sota/image-classification-on-imagenet)
+|Network | 	OA (%) |avgAcc (%) |
+|--------|---------|-----------|
+|PointNet |	84.15 |	73.95 |
+|PointNet++|	86.87|	75.30 |
+|DGCNN |	90.90|	77.16 |
+|PointCNN |	91.05 |	88.68 |
+|PosPool | 	94.33 |	93.61 |
+|PseudoGrid |	94.97 |	96.24 |
+|**SE-PseudoGrid (ours)** |	**96.25** | **97.54**|
 
-| Model name         | Top 1 Accuracy  | Top 5 Accuracy |
-| ------------------ |---------------- | -------------- |
-| My awesome model   |     -       |      -     |
 
 >📋  Include a table of results from your paper, and link back to the leaderboard for clarity and context. If your main result is a figure, include that figure and link to the command or notebook to reproduce it. 
 
