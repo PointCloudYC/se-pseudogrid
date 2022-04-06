@@ -37,7 +37,7 @@ sh init.sh
 
 ## Pipework dataset
 
-We select the sole piping dataset i.e., Pipework (shown below) as the benchmark and canonicalize it following ModelNet40' pratice. The canonicalized dataset can be downloaded from [Pipework dataset](https://hkustconnect-my.sharepoint.com/:u:/g/personal/cyinac_connect_ust_hk/ETc4J03wD0FFidQW4OnQUnUB0fX4m1BqkPhsYZy5W9Lz_w?e=lT3k6Q). Note that the detailed preprocessing steps are shown in the [juypter notebook](pipework-prepare-v2.ipynb).
+We select the sole piping dataset i.e., Pipework (shown below) as the benchmark and canonicalize it following ModelNet40' pratice. The canonicalized dataset can be downloaded from [Pipework dataset](https://hkustconnect-my.sharepoint.com/:u:/g/personal/cyinac_connect_ust_hk/ETc4J03wD0FFidQW4OnQUnUB0fX4m1BqkPhsYZy5W9Lz_w?e=lT3k6Q). Note that the detailed preprocessing steps are shown in the [pipework-prepare-v2.ipynb](pipework-prepare-v2.ipynb).
 
 <img src="images/fig11-instances.png" alt="instances of Pipework" width="400"/>
 
