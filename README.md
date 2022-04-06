@@ -1,72 +1,125 @@
 # Classification of Piping Components
 
-**Coming soon!** 
+This repository is an official implementation of our new paper **Automated Classification of Piping Components from 3D LiDAR Point Clouds using SE-PseudoGrid**, [link (to be added)](xxx) published in the **xxx** journal. 
 
-This repository is the official implementation of **Automated Classification of Piping Components from 3D LiDAR Point Clouds using SE-PseudoGrid**, [link (to be added)](xxx). 
+In this study, we proposed **a novel local aggregation operator(LAO) based the squeeze-and-excite mechanism from the popular SENet in 2D image analysis (termed SE-LAO) for point cloud feature learning**. On top of the newly proposed SE-LAO and the strong PseudoGrid, we construct a new network for piping component classification (named SE-PseudoGrid). 
+To the best of our knowledge, it is the first attempt to generalize the squeeze-and-excite mechanism for 2D image analysis to 3D point cloud analysis. With this new design in the local aggreation operators for point clouds, our SE-PseudoGrid outpeforms the strong baseline PseudoGrid by a large margin on the piping benchmark datast(Pipework).
 
-We proposed a new local aggregation operator termed SE-LAO for point cloud feature learning through introducing the squeeze-excite (SE) mechanism from SENet into the pseudo grid LAO.
-
-- the conventional PseudoGrid LAO
+- the original LAO in the PseudoGrid (reproduced based on the [CloserLook3D paper](https://arxiv.org/abs/2007.01294))
 <img src="images/fig3-pseudo-grid-LAO.png" alt="" width="700"/>
 
-- our proposed SE-LAO
+- our novel SE-LAO based on the LAO (in PseudoGrid) and squeeze-and-excite mechanism
 <img src="images/fig4-SE-LAO.png" alt="" width="600"/>
-
-## Pipework dataset
-
-As the sole publicly open dataset for piping components, we canonicalize it following ModelNet40' pratice.
-
-- typical instances for the 17 categories in the Pipework
-<img src="images/fig11-instances.png" alt="instances of Pipework" width="400"/>
-
-- class distribution 
-<img src="images/fig9-pipework.png" alt="" width="500"/>
-
-- train and test set distribution
-<img src="images/fig10-dataset-splitting.png" alt="" width="500"/>
 
 ## Requirements
 
 To install requirements:
 
 ```setup
-pip install -r requirements.txt
+#!/bin/bash
+ENV_NAME='se'
+conda create –n $ENV_NAME python=3.6.10 -y
+source activate $ENV_NAME
+conda install -c anaconda pillow=6.2 -y
+conda install pytorch==1.4.0 torchvision==0.5.0 cudatoolkit=10.1 -c pytorch -y
+conda install -c conda-forge opencv -y
+pip3 install termcolor tensorboard h5py easydict
 ```
 
->📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
+Note that: the latest codes are tested on two Ubuntu settings: 
+- Ubuntu 18.04, Nvidia 3090, CUDA 11.3, PyTorch 1.4 and Python 3.6
+
+### Compile custom CUDA operators
+
+```bash
+sh init.sh
+```
+
+## Pipework dataset
+
+We select the sole piping dataset i.e., Pipework (shown below) as the benchmark and canonicalize it following ModelNet40' pratice. The canonicalized dataset can be downloaded from [Pipework dataset](https://hkustconnect-my.sharepoint.com/:u:/g/personal/cyinac_connect_ust_hk/ETc4J03wD0FFidQW4OnQUnUB0fX4m1BqkPhsYZy5W9Lz_w?e=lT3k6Q). Note that the detailed preprocessing steps are shown in the [juypter notebook](pipework-prepare-v2.ipynb).
+
+<img src="images/fig11-instances.png" alt="instances of Pipework" width="400"/>
+
+typical instances for the 17 categories in the Pipework
+
+<img src="images/fig10-dataset-splitting.png" alt="" width="500"/>
+train and test set distribution of the new Pipework dataset
+
+```
+# download the pipework dataset
+unzip pipework-new.zip
+cd pipework-new
+# move the pipe-original to the root/data folder
+# or symlink to the root/data folder
+```
+
+The file structure should look like:
+
+```
+<root>
+├── cfgs
+│   └── s3dis
+├── data
+│   └── Pipework
+│       └── PipeWork-original
+│           ├── BlindFlange
+│           ├── Cross
+│           └── ...
+├── init.sh
+├── datasets
+├── function
+├── models
+├── ops
+└── utils
+```
 
 ## Training
 
 To train the model(s) in the paper, run this command:
 
 ```train
-python train.py --input-data <path_to_data> --alpha 10 --beta 20
+python -m torch.distributed.launch \
+--master_port ${port_number} \ # 12346
+--nproc_per_node ${NUM_GPUs} \ # e.g., 1
+function/train_pipework_dist.py \
+--cfg cfgs/pipework/${yaml_file} \ # e.g., cfgs/pipework/xxx.yaml
+--num_points ${num_points} \
+--val_freq 10 \
+--save_freq 50 \
+--loss ${LOSS} \ # e.g., smooth
+--use_avg_max_pool ${use_avg_max_pool}  # e.g., true  
 ```
-
->📋  Describe how to train the models, with example commands on how to train the models in your paper, including the full training procedure and appropriate hyperparameters.
 
 ## Evaluation
 
 To evaluate my model on ImageNet, run:
 
 ```eval
-python eval.py --model-file mymodel.pth --benchmark imagenet
+python -m torch.distributed.launch \
+--master_port ${port_number} \ # 12346
+--nproc_per_node ${NUM_GPUs} \
+--local_rank 1 \
+function/evaluate_pipework_dist.py \
+--load_path ${checkpoint_path} \ # e.g., log/pipework/xxx/best.pth 
+--cfg ${cfg_path} \ # e.g., cfgs/pipework/xxx.yaml
+--data_aug ${data_aug} \ # e.g., true or false
+--loss ${LOSS} \ # e.g., smooth
+--use_avg_max_pool ${use_avg_max_pool}  # e.g., true  
 ```
-
->📋  Describe how to evaluate the trained models on benchmarks reported in the paper, give commands that produce the results (section below).
 
 ## Pre-trained Models
 
 You can download pretrained models here:
 
-- [My awesome model](https://drive.google.com/mymodel.pth) trained on ImageNet using parameters x,y,z. 
+- [TOADD](https://drive.google.com/mymodel.pth) trained on the Pipework
 
->📋  Give a link to where/how the pretrained models can be downloaded and how they were trained (if applicable).  Alternatively you can have an additional column in your results table with a link to the models.
 
 ## Results
 
 - We benchmark six shortlisted representatative DL-based methods on the Pipework.
 - On top of our newly proposed SE-LAO and the strong baseline PseduoGrid, we construct our SE-PseudoGrid; It achieves better performance than the baseline, decreasing OA and avgAcc error rate of the backbone by 25.4%, 34.5%, respectively.
+
 <img src="images/fig8-SE-PseudoGrid.png" alt="" width="700"/>
 
 |Network | 	OA (%) |avgAcc (%) |
@@ -80,10 +133,26 @@ You can download pretrained models here:
 |**SE-PseudoGrid (ours)** |	**96.25** | **97.54**|
 
 
->📋  Include a table of results from your paper, and link back to the leaderboard for clarity and context. If your main result is a figure, include that figure and link to the command or notebook to reproduce it. 
 
+## Acknowledgements
+
+Our pytorch codes borrowed a lot from [CloserLook3D](https://github.com/zeliu98/CloserLook3D/tree/master/pytorch) and the custom trilinear interoplation CUDA ops are modified from [erikwijmans's Pointnet2_PyTorch](https://github.com/erikwijmans/Pointnet2_PyTorch).
+
+Besides, thanks [Prof. Duhwan Mun](https://www.dhmun.net/) group to provide the open [PipeWork](https://www.dhmun.net/home/Research_Data) dataset.
 
 ## Contributing
 
->📋  Pick a licence and describe how to contribute to your code repository. 
+MIT license
 
+## Citation
+
+If you find our work useful in your research, please consider citing:
+
+```
+@article{se-pseudogrid,
+    Author = {YIN, Chao},
+    Title = {Automated Classification of Piping Components from 3D LiDAR Point Clouds using SE-PseudoGrid},
+    Journal = {Automation in Construction},
+    Year = {2022}
+   }
+```
